@@ -43,53 +43,52 @@ class ViewController: UIViewController {
     
     private func showCurrentState() {
         
-        if currentState == .off {
-            redLightView.alpha = 0.3
-            yellowLightView.alpha = 0.3
-            greenLightView.alpha = 0.3
-            startButton.setTitle("START", for: .normal)
+        turnAllLightsOff()
+        turnOnLight(for: currentState)
+        updateButtonTitle(for: currentState)
+    }
+    
+    private func turnAllLightsOff() {
+        [redLightView, yellowLightView, greenLightView].forEach {
+            $0?.turnLights(on: false)
         }
-        
-        if currentState == .red {
-            redLightView.alpha = 1
-            yellowLightView.alpha = 0.3
-            greenLightView.alpha = 0.3
-            startButton.setTitle("NEXT", for: .normal)
-            
+    }
+    
+    private func turnOnLight(for state: TrafficLightState) {
+        switch state {
+        case .red: redLightView.turnLights(on: true)
+        case .yellow: yellowLightView.turnLights(on: true)
+        case .green: greenLightView.turnLights(on: true)
+        case .off: break
         }
-        
-        if currentState == .yellow {
-            redLightView.alpha = 0.3
-            yellowLightView.alpha = 1
-            greenLightView.alpha = 0.3
-            startButton.setTitle("NEXT", for: .normal)
-        }
-        
-        if currentState == .green {
-            redLightView.alpha = 0.3
-            yellowLightView.alpha = 0.3
-            greenLightView.alpha = 1
-            startButton.setTitle("NEXT", for: .normal)
-        }
-        
+    }
+    
+    private func updateButtonTitle(for state: TrafficLightState) {
+        startButton.setTitle(
+            state == .off ? "START" : "NEXT", for: .normal
+        )
     }
 
     private func switchCurrentStateToNextState() {
-        
-        if currentState == .off {
-            currentState = .red
+        currentState = currentState.next
+    }
+}
+
+extension TrafficLightState {
+    
+    var next: TrafficLightState {
+        switch self {
+        case .off: return .red
+        case .red: return .yellow
+        case .yellow: return .green
+        case .green: return .red
         }
-        
-        else if currentState == .red {
-            currentState = .yellow
-        }
-        
-        else if currentState == .yellow {
-            currentState = .green
-        }
-        
-        else if currentState == .green {
-            currentState = .red
-        }
+    }
+}
+
+extension UIView {
+    
+    func turnLights(on: Bool) {
+        alpha = on ? 1 : 0.3
     }
 }
