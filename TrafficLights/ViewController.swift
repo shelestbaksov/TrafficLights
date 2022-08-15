@@ -36,9 +36,9 @@ class ViewController: UIViewController {
     }
     
     private func makeViewsRound() {
-        redLightView.layer.cornerRadius = 64
-        yellowLightView.layer.cornerRadius = 64
-        greenLightView.layer.cornerRadius = 64
+        redLightView.layer.cornerRadius = redLightView.frame.width / 2
+        yellowLightView.layer.cornerRadius = redLightView.frame.width / 2
+        greenLightView.layer.cornerRadius = redLightView.frame.width / 2
     }
     
     private func showCurrentState() {
